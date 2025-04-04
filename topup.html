@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamro Top-Up Centre</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        header {
+            background: #333;
+            color: white;
+            padding: 1rem;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            position: relative;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        select, input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        textarea {
+            height: 100px; /* Increased suggestion box size */
+        }
+        .confirmation, .review {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        .confirmation {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+    <script>
+        function validateUID(input) {
+            return input.replace(/\D/g, '');
+        }
+
+        function reviewDetails(event) {
+            event.preventDefault();
+            let playerID = document.getElementById('playerID').value.trim();
+            let ffName = document.getElementById('ffName').value.trim();
+            const diamonds = document.getElementById('diamonds').value;
+            const payment = document.getElementById('payment').value;
+
+            playerID = validateUID(playerID);
+            if (playerID === "" || ffName === "" || payment === "choose") {
+                alert("Please enter all required details.");
+                return;
+            }
+
+            document.getElementById('reviewMessage').innerText = 
+                `Please confirm your details:\nUID: ${playerID}\nFree Fire Name: ${ffName}\nDiamonds: ${diamonds}\nPayment Method: ${payment}`;
+            document.getElementById('review').style.display = 'block';
+        }
+
+        function processPayment() {
+            const screenshot = document.getElementById('screenshot').files[0];
+            if (!screenshot) {
+                alert("Please upload a screenshot of your payment.");
+                return;
+            }
+
+            document.getElementById('confirmationMessage').innerText = 
+                "Thank you for ordering! Your request has been received. You will receive your diamonds within 24 hours if the payment is verified.";
+            document.getElementById('confirmation').style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Hamro Top-Up Centre</h1>
+    </header>
+    <div class="container">
+        <h2>Top-Up Your Diamonds</h2>
+        <form onsubmit="reviewDetails(event)">
+            <label for="playerID">Enter UID Number:</label>
+            <input type="text" id="playerID" placeholder="Your Free Fire UID" required oninput="this.value = validateUID(this.value)">
+            
+            <label for="ffName">Enter Free Fire Name:</label>
+            <input type="text" id="ffName" placeholder="Your Free Fire Name" required>
+            
+            <label for="coupon">Enter Coupon Code (Optional):</label>
+            <input type="text" id="coupon" placeholder="" oninput="this.value = this.value.toLowerCase()">
+
+            <label for="diamonds">Select Diamonds:</label>
+            <select id="diamonds">
+                <option value="95">115 Diamonds - 95</option>
+                <option value="180">240 Diamonds - 180</option>
+                <option value="270">355 Diamonds - 270</option>
+                <option value="360">480 Diamonds - 360</option>
+                <option value="450">610 Diamonds - 450</option>
+            </select>
+            
+            <label for="payment">Choose Payment Method:</label>
+            <select id="payment">
+                <option value="choose">Choose Payment Method</option>
+                <option value="esewa">eSewa</option>
+                <option value="handtohand">Hand to Hand</option>
+            </select>
+
+            <div id="esewaDetails" style="display:none;">
+                <p><strong>Please send the money to the following eSewa number: <span id="esewaNumber">9869985065</span></strong></p>
+            </div>
+
+            <div id="handtohandDetails" style="display:none;">
+                <label for="handtohandName">Enter Your Name (Hand to Hand):</label>
+                <input type="text" id="handtohandName" placeholder="Your Name">
+            </div>
+
+            <label for="screenshot">Upload Payment Screenshot:</label>
+            <input type="file" id="screenshot" accept="image/*" required>
+
+            <label for="suggestion">Suggestions (Optional):</label>
+            <textarea id="suggestion" placeholder="Enter any suggestions here..."></textarea>
+
+            <button type="submit">Review Details</button>
+        </form>
+        
+        <div id="review" class="review">
+            <p id="reviewMessage"></p>
+            <br>
+            <button onclick="processPayment()">Confirm and Proceed</button>
+        </div>
+        
+        <div id="confirmation" class="confirmation">
+            <p id="confirmationMessage">Thank you for ordering! Your request has been received. You will receive your diamonds within 24 hours if the payment is verified.</p>
+        </div>
+        
+        <!-- For More Information Link -->
+        <div>
+            <a href="https://www.facebook.com/share/163VSYQxpP/" target="_blank">
+                <button>For More Information Click Here</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('payment').addEventListener('change', function () {
+            const paymentMethod = this.value;
+            if (paymentMethod === 'esewa') {
+                document.getElementById('esewaDetails').style.display = 'block';
+                document.getElementById('handtohandDetails').style.display = 'none';
+            } else if (paymentMethod === 'handtohand') {
+                document.getElementById('esewaDetails').style.display = 'none';
+                document.getElementById('handtohandDetails').style.display = 'block';
+            } else {
+                document.getElementById('esewaDetails').style.display = 'none';
+                document.getElementById('handtohandDetails').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
